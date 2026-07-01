@@ -1,202 +1,36 @@
-# StageCraft: Training-Free VLA Robotics Optimization with VLM Failure Mitigation
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-StageCraft is a training-free robotics framework that uses Vision-Language Models (VLMs) to improve Vision-Language-Action (VLA) robot execution by detecting failure-inducing distractors and optimizing the environment before the robot acts.
+## Getting Started
 
-## What Is StageCraft?
-
-StageCraft helps embodied AI systems succeed in cluttered or confusing scenes without retraining the robot policy.
-
-It analyzes the task, the robot's visual observation, and likely failure points, then recommends or applies environment-level changes such as distractor removal, scene simplification, or object placement optimization.
-
-## Why This Matters for VLA Robotics
-
-Vision-Language-Action policies can fail even when the policy is capable, because the environment contains distractors, ambiguous objects, misleading layouts, or visual clutter.
-
-Traditional fixes often require:
-
-- collecting more robot demonstrations
-- retraining or fine-tuning a VLA policy
-- manually editing task scenes
-- adding task-specific rules
-
-StageCraft takes a different path: it improves execution conditions before action, using VLM reasoning instead of policy retraining.
-
-## Solution Overview
-
-StageCraft acts as a pre-execution reasoning layer for robot manipulation and embodied AI.
-
-1. Read the task instruction and robot observation.
-2. Use a Vision-Language Model to identify objects, distractors, and likely failure triggers.
-3. Estimate which scene elements may reduce VLA success rate.
-4. Propose environment modifications before the robot executes.
-5. Run the original VLA policy in the optimized environment.
-
-The goal is simple: improve robot success rate while keeping the underlying VLA model unchanged.
-
-## Key Features
-
-- Training-free VLA robotics optimization
-- Vision-Language Model based scene understanding
-- Failure-inducing distractor detection
-- Environment optimization before policy execution
-- Robot manipulation success-rate improvement without retraining
-- Compatible with embodied AI evaluation workflows
-- Designed for RLBench-style simulation tasks
-- Useful with VLA policies such as SmolVLA and Pi0.5
-- Supports research on failure mitigation, scene simplification, and robot robustness
-
-## Architecture
-
-StageCraft is organized as a lightweight reasoning pipeline.
-
-```text
-Task Instruction
-       +
-Robot Visual Observation
-       |
-       v
-Vision-Language Model Reasoning
-       |
-       v
-Failure-Inducing Distractor Analysis
-       |
-       v
-Environment Optimization Plan
-       |
-       v
-Original VLA Policy Execution
-       |
-       v
-Higher Robot Task Success Rate
-```
-
-StageCraft does not replace a VLA policy. It improves the environment and execution context around the policy.
-
-## Quickstart
-
-> The commands below show the intended developer workflow for a StageCraft robotics repository.
+First, run the development server:
 
 ```bash
-git clone https://github.com/shiyanyong/stagecraft.git
-cd stagecraft
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-Run a minimal StageCraft analysis:
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-```bash
-python examples/run_stagecraft.py \
-  --task "pick up the red cube and place it in the drawer" \
-  --observation examples/assets/rlbench_scene.png \
-  --policy smolvla \
-  --output outputs/environment_plan.json
-```
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Minimal Example
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-```python
-from stagecraft import StageCraftPlanner
+## Learn More
 
-planner = StageCraftPlanner(vlm="gpt-4o")
+To learn more about Next.js, take a look at the following resources:
 
-plan = planner.analyze_scene(
-    task="pick up the red cube and place it in the drawer",
-    observation="examples/assets/rlbench_scene.png",
-    policy="SmolVLA",
-)
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-print(plan.failure_risks)
-print(plan.environment_edits)
-```
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-Example output:
+## Deploy on Vercel
 
-```json
-{
-  "failure_risks": [
-    "blue cube is visually similar to the target red cube",
-    "drawer handle is partially occluded",
-    "background objects create unnecessary manipulation distractors"
-  ],
-  "environment_edits": [
-    "remove non-target blue cube",
-    "clear objects near drawer handle",
-    "keep target cube visible in the robot workspace"
-  ],
-  "expected_effect": "reduced visual ambiguity before VLA execution"
-}
-```
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-## Inputs and Outputs
-
-### Inputs
-
-- Natural-language robot task instruction
-- RGB image or simulator observation
-- Optional object metadata
-- Optional VLA policy name, such as SmolVLA or Pi0.5
-- Optional benchmark environment, such as RLBench
-
-### Outputs
-
-- Failure-risk analysis
-- Distractor list
-- Environment optimization plan
-- Optional scene-edit instructions
-- Optional execution report after VLA policy rollout
-
-## When to Use StageCraft
-
-Use StageCraft when:
-
-- a robot manipulation policy fails in visually cluttered scenes
-- a VLA model confuses target objects with distractors
-- you want to improve task success without retraining
-- you are evaluating embodied AI robustness
-- you need explainable failure mitigation before robot execution
-- you work with RLBench, SmolVLA, Pi0.5, or similar VLA robotics pipelines
-
-## Use Cases
-
-- Vision-Language-Action failure mitigation
-- Robot manipulation in cluttered environments
-- Embodied AI benchmark optimization
-- RLBench scene analysis
-- VLM-guided distractor removal
-- Simulation-to-policy evaluation
-- Robot task success-rate improvement
-- Pre-execution safety and robustness checks
-
-## API-Style Explanation
-
-```text
-StageCraftPlanner.analyze_scene(task, observation, policy)
-```
-
-Returns a structured plan:
-
-- `failure_risks`: why the robot may fail
-- `distractors`: scene elements that may confuse the policy
-- `environment_edits`: recommended scene modifications
-- `execution_notes`: how to run the VLA policy after optimization
-
-## Limitations
-
-- StageCraft depends on the quality of the VLM's visual reasoning.
-- It does not retrain or improve the internal weights of a VLA policy.
-- Physical robot deployment requires safe environment-edit mechanisms.
-- Some failures come from policy limitations rather than scene distractors.
-
-## SEO Keywords
-
-Vision Language Action, VLA robotics, VLA robotics optimization, Vision Language Action failure mitigation, robot manipulation VLM framework, embodied AI, Vision-Language Models, VLM reasoning, distractor removal, failure mitigation, robot manipulation, RLBench, SmolVLA, Pi0.5, robotics policy execution, environment optimization, training-free robotics framework.
-
-## Suggested Tagline
-
-Training-free VLM reasoning for stronger Vision-Language-Action robot execution.
-
-## Citation-Friendly Summary
-
-StageCraft is a training-free framework for VLA robotics that uses Vision-Language Models to identify failure-inducing distractors and optimize environments before robot execution, improving manipulation success without retraining the underlying policy.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
