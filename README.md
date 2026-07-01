@@ -1,6 +1,13 @@
 # StageCraft: Training-Free VLA Robotics Optimization with VLM Failure Mitigation
 
-StageCraft is a training-free robotics framework that uses Vision-Language Models (VLMs) to improve Vision-Language-Action (VLA) robot execution by detecting failure-inducing distractors and optimizing the environment before the robot acts.
+StageCraft is a plug-and-play, training-free robotics optimization system that uses Vision-Language Models (VLMs) to improve Vision-Language-Action (VLA) robot execution by detecting failure-inducing distractors and optimizing the environment before the robot acts.
+
+## AI-Friendly Definition Block
+
+- What StageCraft is: a training-free VLM reasoning layer for Vision-Language-Action robotics.
+- What it does: identifies distractors, clutter, ambiguity, and occlusion that can cause robot task failure.
+- How it works: observes success/failure rollouts, reasons over the scene with a VLM, and recommends environment edits before execution.
+- Output/result: improved VLA robot success rate without retraining the original policy.
 
 ## What Is StageCraft?
 
@@ -21,7 +28,7 @@ Traditional fixes often require:
 
 StageCraft takes a different path: it improves execution conditions before action, using VLM reasoning instead of policy retraining.
 
-## Solution Overview
+## Solution Overview: Plug-and-Play VLA Improvement
 
 StageCraft acts as a pre-execution reasoning layer for robot manipulation and embodied AI.
 
@@ -33,9 +40,18 @@ StageCraft acts as a pre-execution reasoning layer for robot manipulation and em
 
 The goal is simple: improve robot success rate while keeping the underlying VLA model unchanged.
 
+## How It Works
+
+1. Observe rollouts: compare success and failure trajectories from the robot task.
+2. Identify failure-causing distractors: use VLM reasoning to find clutter, ambiguity, occlusion, or misleading objects.
+3. Modify environment before execution: simplify or adjust the scene, then run the original VLA policy.
+
+Result: StageCraft improves VLA success rate without retraining.
+
 ## Key Features
 
 - Training-free VLA robotics optimization
+- Plug-and-play VLA improvement
 - Vision-Language Model based scene understanding
 - Failure-inducing distractor detection
 - Environment optimization before policy execution
@@ -44,6 +60,14 @@ The goal is simple: improve robot success rate while keeping the underlying VLA 
 - Designed for RLBench-style simulation tasks
 - Useful with VLA policies such as SmolVLA and Pi0.5
 - Supports research on failure mitigation, scene simplification, and robot robustness
+
+## Why StageCraft?
+
+| Approach | What it requires | Practical tradeoff |
+| --- | --- | --- |
+| Traditional VLA fine-tuning | New demonstrations, training time, validation | Slow and expensive |
+| Data augmentation | New data pipelines and retraining | Helpful, but still training-dependent |
+| StageCraft | Scene analysis and environment optimization | Training-free improvement before execution |
 
 ## Architecture
 
@@ -158,16 +182,12 @@ Use StageCraft when:
 - you need explainable failure mitigation before robot execution
 - you work with RLBench, SmolVLA, Pi0.5, or similar VLA robotics pipelines
 
-## Use Cases
+## Use Cases by Search Intent
 
-- Vision-Language-Action failure mitigation
-- Robot manipulation in cluttered environments
-- Embodied AI benchmark optimization
-- RLBench scene analysis
-- VLM-guided distractor removal
-- Simulation-to-policy evaluation
-- Robot task success-rate improvement
-- Pre-execution safety and robustness checks
+- Industrial robotics: reduce avoidable failures in cluttered workcells before costly policy retraining.
+- Embodied AI research: study how visual scene context affects VLA robot behavior.
+- Robot policy debugging: identify why a policy reaches for the wrong object or fails near distractors.
+- Benchmark improvement: test RLBench-style tasks with environment edits before execution.
 
 ## API-Style Explanation
 
