@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), "HarmonyOS Sans", "Source Han Sans SC",
+    "Noto Sans CJK SC", "Microsoft YaHei", Arial, Helvetica, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: #d4b483;
+  color: #0a0a0a;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.hero-depth-bg {
+  animation: hero-depth-drift 18s ease-in-out infinite alternate;
+  transform-origin: 62% 48%;
+  will-change: transform;
+}
+
+.hero-ambient-glow {
+  background:
+    radial-gradient(circle at 76% 38%, rgba(212, 180, 131, 0.16), transparent 28%),
+    radial-gradient(circle at 58% 82%, rgba(255, 255, 255, 0.055), transparent 26%);
+  mix-blend-mode: screen;
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.hero-light-sweep {
+  animation: hero-light-sweep 9s ease-in-out infinite;
+  background: linear-gradient(
+    104deg,
+    transparent 0%,
+    rgba(255, 226, 178, 0.02) 24%,
+    rgba(255, 226, 178, 0.16) 48%,
+    rgba(255, 226, 178, 0.035) 64%,
+    transparent 100%
+  );
+  filter: blur(14px);
+  opacity: 0.55;
+  pointer-events: none;
+  transform: skewX(-14deg) translateX(0);
+}
+
+.hero-scene:hover .hero-depth-bg {
+  transform: scale(1.045) translate3d(-0.5%, -0.35%, 0);
+}
+
+@keyframes hero-depth-drift {
+  0% {
+    transform: scale(1.01) translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: scale(1.055) translate3d(-0.8%, -0.45%, 0);
+  }
+}
+
+@keyframes hero-light-sweep {
+  0%,
+  18% {
+    opacity: 0;
+    transform: skewX(-14deg) translateX(0);
+  }
+
+  42% {
+    opacity: 0.62;
+  }
+
+  76%,
+  100% {
+    opacity: 0;
+    transform: skewX(-14deg) translateX(-250%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-depth-bg,
+  .hero-light-sweep {
+    animation: none;
+  }
+}
