@@ -5,9 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, SlidersHorizontal } from "lucide-react";
 import { AddToCartButton } from "@/components/add-to-cart-button";
+import { useStorefrontProducts } from "@/components/storefront-products-provider";
 import {
   formatPrice,
-  products,
   scaleOptions,
   sceneCategories,
   statusStyles,
@@ -15,26 +15,34 @@ import {
   type Scale,
 } from "@/lib/site-data";
 
-const statusOptions: Array<"全部" | ProductStatus> = [
-  "全部",
+const allOption = "全部";
+const statusOptions = [
+  allOption,
   "现货",
   "预订",
   "小批量",
-];
+] as Array<typeof allOption | ProductStatus>;
+
+const statusClass = "border-[#D4B483]/55 bg-[#D4B483]/10 text-[#D4B483]";
 
 export function ProductCatalog() {
-  const [scale, setScale] = useState<"全部" | Scale>("全部");
-  const [scene, setScene] = useState("全部");
-  const [status, setStatus] = useState<"全部" | ProductStatus>("全部");
+  const [scale, setScale] = useState<typeof allOption | Scale>(allOption);
+  const [scene, setScene] = useState(allOption);
+  const [status, setStatus] = useState<typeof allOption | ProductStatus>(allOption);
+  const { products, synced } = useStorefrontProducts();
+
+  const activeScenes = useMemo(() => {
+    return Array.from(new Set([...sceneCategories, ...products.map((item) => item.scene)]));
+  }, [products]);
 
   const filteredProducts = useMemo(() => {
     return products.filter((item) => {
-      const scaleMatched = scale === "全部" || item.scales.includes(scale);
-      const sceneMatched = scene === "全部" || item.scene === scene;
-      const statusMatched = status === "全部" || item.status === status;
+      const scaleMatched = scale === allOption || item.scales.includes(scale);
+      const sceneMatched = scene === allOption || item.scene === scene;
+      const statusMatched = status === allOption || item.status === status;
       return scaleMatched && sceneMatched && statusMatched;
     });
-  }, [scale, scene, status]);
+  }, [products, scale, scene, status]);
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-14 sm:px-8 sm:py-24">
@@ -45,22 +53,23 @@ export function ProductCatalog() {
         <h1 className="max-w-4xl text-4xl font-semibold leading-tight sm:text-6xl lg:text-7xl">
           选择适合你模型的场景地台
         </h1>
-        <div className="flex w-fit items-center gap-3 border border-white/15 px-4 py-3 text-xs tracking-[0.18em] text-white/55">
+        <div className="flex w-fit items-center gap-3 border border-white/15 px-4 py-3 text-xs tracking-[0.12em] text-white/55">
           <SlidersHorizontal className="h-4 w-4" />
           {filteredProducts.length} / {products.length} 款商品
+          {synced ? " · 已同步后台" : ""}
         </div>
       </div>
 
       <div className="mt-10 space-y-5 border-y border-white/10 py-5">
         <FilterGroup
           label="比例"
-          options={["全部", ...scaleOptions]}
+          options={[allOption, ...scaleOptions]}
           value={scale}
-          onChange={(value) => setScale(value as "全部" | Scale)}
+          onChange={(value) => setScale(value as typeof allOption | Scale)}
         />
         <FilterGroup
           label="场景"
-          options={["全部", ...sceneCategories]}
+          options={[allOption, ...activeScenes]}
           value={scene}
           onChange={setScene}
         />
@@ -68,7 +77,7 @@ export function ProductCatalog() {
           label="状态"
           options={statusOptions}
           value={status}
-          onChange={(value) => setStatus(value as "全部" | ProductStatus)}
+          onChange={(value) => setStatus(value as typeof allOption | ProductStatus)}
         />
       </div>
 
@@ -93,7 +102,7 @@ export function ProductCatalog() {
                 />
                 <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-3">
                   <span
-                    className={`border px-3 py-1.5 text-xs tracking-[0.16em] backdrop-blur ${statusStyles[item.status]}`}
+                    className={`border px-3 py-1.5 text-xs tracking-[0.16em] backdrop-blur ${statusStyles[item.status] ?? statusClass}`}
                   >
                     {item.status}
                   </span>
@@ -150,7 +159,7 @@ export function ProductCatalog() {
 
       {filteredProducts.length === 0 ? (
         <div className="mt-12 border border-white/10 bg-[#111111] p-8 text-white/60">
-          暂无匹配商品。可以切换比例或场景，或联系我们定制对应尺寸。
+          暂无匹配商品。可以切换比例或场景，或联系定制对应尺寸。
         </div>
       ) : null}
     </section>

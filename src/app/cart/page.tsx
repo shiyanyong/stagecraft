@@ -6,8 +6,9 @@ import Link from "next/link";
 import { Check, Minus, Plus, Send, Trash2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { useCart } from "@/components/cart-provider";
+import { useStorefrontProducts } from "@/components/storefront-products-provider";
 import { buttonVariants } from "@/components/ui/button";
-import { formatPrice, products } from "@/lib/site-data";
+import { formatPrice, products as staticProducts } from "@/lib/site-data";
 
 const inventoryAdminUrl =
   process.env.NEXT_PUBLIC_STAGECRAFT_ADMIN_URL ?? "http://127.0.0.1:5173/";
@@ -31,6 +32,7 @@ type CustomerForm = {
 export default function CartPage() {
   const { items, subtotal, addItem, updateQuantity, removeItem, clearCart } =
     useCart();
+  const { products, findProduct } = useStorefrontProducts();
   const [customer, setCustomer] = useState<CustomerForm>({
     name: "",
     contact: "",
@@ -43,7 +45,7 @@ export default function CartPage() {
   const cartProducts = items
     .map((item) => ({
       item,
-      product: products.find((product) => product.slug === item.slug),
+      product: findProduct(item.slug),
     }))
     .filter((entry): entry is {
       item: { slug: string; quantity: number };
@@ -66,7 +68,7 @@ export default function CartPage() {
       customer,
       amount: subtotal,
       items: cartProducts.map(({ item, product }) => ({
-        productId: backendProductIds[product.slug],
+        productId: backendProductIds[product.slug] ?? product.slug,
         slug: product.slug,
         name: product.cnName,
         sku: product.name,
@@ -321,7 +323,7 @@ function EmptyCart({
   recommended,
   addItem,
 }: {
-  recommended: typeof products;
+  recommended: typeof staticProducts;
   addItem: (slug: string) => void;
 }) {
   return (

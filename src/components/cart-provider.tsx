@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { products } from "@/lib/site-data";
+import { useStorefrontProducts } from "@/components/storefront-products-provider";
 
 export type CartItem = {
   slug: string;
@@ -30,6 +30,7 @@ const storageKey = "stagecraft-cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const { findProduct } = useStorefrontProducts();
 
   useEffect(() => {
     window.localStorage.removeItem(storageKey);
@@ -39,7 +40,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value = useMemo<CartContextValue>(() => {
     const count = items.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal = items.reduce((sum, item) => {
-      const product = products.find((candidate) => candidate.slug === item.slug);
+      const product = findProduct(item.slug);
       return sum + (product?.price ?? 0) * item.quantity;
     }, 0);
 
@@ -73,7 +74,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setItems((current) => current.filter((item) => item.slug !== slug)),
       clearCart: () => setItems([]),
     };
-  }, [items]);
+  }, [findProduct, items]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
