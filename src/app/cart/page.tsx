@@ -57,10 +57,10 @@ export default function CartPage() {
     )
     .slice(0, 3);
 
-  const backendOrderUrl = useMemo(() => {
-    if (!cartProducts.length) return inventoryAdminUrl;
+  const backendOrderPayload = useMemo(() => {
+    if (!cartProducts.length) return "";
 
-    const payload = {
+    return JSON.stringify({
       source: "stagecraft-storefront",
       submittedAt: new Date().toISOString(),
       customer,
@@ -74,10 +74,7 @@ export default function CartPage() {
         price: product.price,
         image: product.image,
       })),
-    };
-
-    const encoded = encodeURIComponent(JSON.stringify(payload));
-    return `${inventoryAdminUrl.replace(/#.*$/, "")}#stagecraft-order=${encoded}`;
+    });
   }, [cartProducts, customer, subtotal]);
 
   function updateCustomer<K extends keyof CustomerForm>(
@@ -90,7 +87,23 @@ export default function CartPage() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitted(true);
-    setOrderReceiverUrl(backendOrderUrl);
+    const encoded = encodeURIComponent(backendOrderPayload);
+    const adminApiBase = inventoryAdminUrl.replace(/\/$/, "");
+    setOrderReceiverUrl(
+      `${adminApiBase}/api/storefront-order?payload=${encoded}`,
+    );
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(
+        `${adminApiBase}/api/storefront-order`,
+        backendOrderPayload,
+      );
+    } else {
+      fetch(`${adminApiBase}/api/storefront-order`, {
+        method: "POST",
+        mode: "no-cors",
+        body: backendOrderPayload,
+      }).catch(() => undefined);
+    }
     clearCart();
   }
 
@@ -291,10 +304,12 @@ export default function CartPage() {
         </section>
       ) : null}
       {orderReceiverUrl ? (
-        <iframe
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
           title="StageCraft order receiver"
           src={orderReceiverUrl}
           className="hidden"
+          alt=""
           aria-hidden="true"
         />
       ) : null}
