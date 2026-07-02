@@ -38,6 +38,7 @@ export default function CartPage() {
     note: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [orderReceiverUrl, setOrderReceiverUrl] = useState("");
 
   const cartProducts = items
     .map((item) => ({
@@ -89,7 +90,8 @@ export default function CartPage() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitted(true);
-    window.open(backendOrderUrl, "_blank", "noopener,noreferrer");
+    setOrderReceiverUrl(backendOrderUrl);
+    clearCart();
   }
 
   return (
@@ -287,6 +289,14 @@ export default function CartPage() {
             </form>
           </div>
         </section>
+      ) : null}
+      {orderReceiverUrl ? (
+        <iframe
+          title="StageCraft order receiver"
+          src={orderReceiverUrl}
+          className="hidden"
+          aria-hidden="true"
+        />
       ) : null}
     </main>
   );
