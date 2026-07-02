@@ -1,23 +1,42 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Check, Minus, Plus, Send, Trash2 } from "lucide-react";
+import { Check, ExternalLink, Minus, Plus, Send, Trash2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { useCart } from "@/components/cart-provider";
 import { buttonVariants } from "@/components/ui/button";
 import { formatPrice, products } from "@/lib/site-data";
 
+const inventoryAdminUrl =
+  process.env.NEXT_PUBLIC_STAGECRAFT_ADMIN_URL ?? "http://127.0.0.1:5173/";
+
+const backendProductIds: Record<string, string> = {
+  "industrial-bay-01": "p-garage",
+  "race-pit-02": "p-racing",
+  "urban-street-03": "p-city",
+  "fuel-stop-04": "p-fuel",
+  "military-outpost-05": "p-military",
+  "future-metro-06": "p-future",
+};
+
+type CustomerForm = {
+  name: string;
+  contact: string;
+  city: string;
+  note: string;
+};
+
 export default function CartPage() {
-  const {
-    items,
-    subtotal,
-    addItem,
-    updateQuantity,
-    removeItem,
-    clearCart,
-  } = useCart();
+  const { items, subtotal, addItem, updateQuantity, removeItem, clearCart } =
+    useCart();
+  const [customer, setCustomer] = useState<CustomerForm>({
+    name: "",
+    contact: "",
+    city: "",
+    note: "",
+  });
   const [submitted, setSubmitted] = useState(false);
 
   const cartProducts = items
@@ -37,9 +56,40 @@ export default function CartPage() {
     )
     .slice(0, 3);
 
+  const adminOrderUrl = useMemo(() => {
+    if (!cartProducts.length) return inventoryAdminUrl;
+
+    const payload = {
+      source: "stagecraft-storefront",
+      submittedAt: new Date().toISOString(),
+      customer,
+      amount: subtotal,
+      items: cartProducts.map(({ item, product }) => ({
+        productId: backendProductIds[product.slug],
+        slug: product.slug,
+        name: product.cnName,
+        sku: product.name,
+        quantity: item.quantity,
+        price: product.price,
+        image: product.image,
+      })),
+    };
+
+    const encoded = encodeURIComponent(JSON.stringify(payload));
+    return `${inventoryAdminUrl.replace(/#.*$/, "")}#stagecraft-order=${encoded}`;
+  }, [cartProducts, customer, subtotal]);
+
+  function updateCustomer<K extends keyof CustomerForm>(
+    key: K,
+    value: CustomerForm[K],
+  ) {
+    setCustomer((current) => ({ ...current, [key]: value }));
+  }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitted(true);
+    window.open(adminOrderUrl, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -128,21 +178,34 @@ export default function CartPage() {
             </div>
 
             <aside className="h-fit border border-white/10 bg-[#111111] p-6 lg:sticky lg:top-24">
-              <h2 className="text-2xl font-semibold">清单摘要</h2>
+              <h2 className="text-2xl font-semibold">订单摘要</h2>
               <div className="mt-6 space-y-4 border-y border-white/10 py-6">
                 <SummaryRow label="商品数量" value={`${items.length} 款`} />
                 <SummaryRow label="商品小计" value={formatPrice(subtotal)} />
-                <SummaryRow label="运费" value="客服确认" />
+                <SummaryRow label="库存后台" value="提交后同步" />
                 <div className="flex justify-between text-xl font-semibold">
                   <span>预计合计</span>
-                  <span className="text-[#D4B483]">{formatPrice(subtotal)}</span>
+                  <span className="text-[#D4B483]">
+                    {formatPrice(subtotal)}
+                  </span>
                 </div>
               </div>
               <a
                 href="#checkout"
                 className={buttonVariants({ className: "mt-6 w-full" })}
               >
-                填写询价信息 <Send className="h-4 w-4" />
+                填写下单信息 <Send className="h-4 w-4" />
+              </a>
+              <a
+                href={adminOrderUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={buttonVariants({
+                  className: "mt-3 w-full",
+                  variant: "secondary",
+                })}
+              >
+                同步到库存后台 <ExternalLink className="h-4 w-4" />
               </a>
               <button
                 type="button"
@@ -152,7 +215,7 @@ export default function CartPage() {
                 清空购物车
               </button>
               <p className="mt-5 text-sm leading-6 text-white/42">
-                提交后客服会确认库存、包装方式、运费和可选定制模块。
+                后台会读取这笔前台订单，生成已支付订单并自动扣减对应商品库存。
               </p>
             </aside>
           </div>
@@ -160,31 +223,63 @@ export default function CartPage() {
       </section>
 
       {cartProducts.length > 0 ? (
-        <section id="checkout" className="border-t border-white/10 bg-[#111111] py-12">
+        <section
+          id="checkout"
+          className="border-t border-white/10 bg-[#111111] py-12"
+        >
           <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-8 lg:grid-cols-[0.9fr_1.1fr]">
             <div>
               <p className="text-xs uppercase tracking-[0.36em] text-[#D4B483]">
-                Inquiry
+                Checkout
               </p>
               <h2 className="mt-4 text-3xl font-semibold sm:text-5xl">
-                提交询价清单
+                提交到库存后台
               </h2>
               <p className="mt-5 max-w-xl leading-8 text-white/58">
-                这里先作为前端询价流程展示。你可以留下称呼和联系方式，后续可接入真实订单、客服或支付系统。
+                填写客户信息后，会打开 StageCraft 智能库存后台，自动导入订单、校验库存并扣减库存。线上页面无法直接访问你电脑本机后台时，也可以用“同步到库存后台”按钮手动打开。
               </p>
             </div>
             <form
               onSubmit={handleSubmit}
               className="grid gap-4 border border-white/10 bg-[#0A0A0A] p-5 sm:grid-cols-2 sm:p-6"
             >
-              <Field label="姓名 / 称呼" name="name" placeholder="例如：陈先生" />
-              <Field label="联系方式" name="contact" placeholder="手机 / 微信 / 邮箱" />
+              <Field
+                label="姓名 / 称呼"
+                name="name"
+                value={customer.name}
+                placeholder="例如：陈先生"
+                onChange={(value) => updateCustomer("name", value)}
+              />
+              <Field
+                label="联系方式"
+                name="contact"
+                value={customer.contact}
+                placeholder="手机 / 微信 / 邮箱"
+                onChange={(value) => updateCustomer("contact", value)}
+              />
+              <Field
+                label="收货城市"
+                name="city"
+                value={customer.city}
+                placeholder="例如：上海"
+                onChange={(value) => updateCustomer("city", value)}
+              />
+              <label>
+                <span className="text-sm text-white/62">订单来源</span>
+                <input
+                  value="StageCraft 官网购物车"
+                  readOnly
+                  className="mt-2 h-12 w-full border border-white/12 bg-white/[0.03] px-4 text-sm text-white/58 outline-none"
+                />
+              </label>
               <label className="sm:col-span-2">
                 <span className="text-sm text-white/62">备注</span>
                 <textarea
                   name="message"
                   rows={4}
-                  placeholder="想确认的数量、比例、场景组合或收货城市"
+                  value={customer.note}
+                  onChange={(event) => updateCustomer("note", event.target.value)}
+                  placeholder="想确认的数量、比例、场景组合或收货要求"
                   className="mt-2 w-full resize-none border border-white/12 bg-white/[0.03] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/28 focus:border-[#D4B483]"
                 />
               </label>
@@ -192,12 +287,12 @@ export default function CartPage() {
                 type="submit"
                 className="inline-flex min-h-12 items-center justify-center gap-2 bg-[#D4B483] px-5 text-sm font-medium text-black transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4B483] sm:col-span-2"
               >
-                发送询价 <Send className="h-4 w-4" />
+                提交并打开库存后台 <ExternalLink className="h-4 w-4" />
               </button>
               {submitted ? (
                 <p className="flex items-center gap-2 text-sm text-emerald-200 sm:col-span-2">
                   <Check className="h-4 w-4" />
-                  已记录询价信息，客服将根据清单与您确认。
+                  已生成前台订单数据，请在新打开的库存后台确认导入结果。
                 </p>
               ) : null}
             </form>
@@ -220,7 +315,7 @@ function EmptyCart({
       <div className="border border-white/10 bg-[#111111] p-8 sm:p-12">
         <h2 className="text-2xl font-semibold">购物车还是空的</h2>
         <p className="mt-4 max-w-xl leading-8 text-white/56">
-          先选择一款适合你模型比例和陈列空间的地台，加入后可统一询价与确认发货。
+          先选择一款适合你模型比例和陈列空间的地台，加入后可统一提交到库存后台。
         </p>
         <Link href="/products" className={buttonVariants({ className: "mt-8" })}>
           去选购地台
@@ -255,7 +350,7 @@ function EmptyCart({
                   onClick={() => addItem(product.slug)}
                   className="h-10 border border-white/12 px-3 text-sm text-white/70 transition hover:border-[#D4B483] hover:text-[#D4B483]"
                 >
-                  加入清单
+                  加入购物车
                 </button>
               </div>
             </div>
@@ -278,18 +373,24 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
 function Field({
   label,
   name,
+  value,
   placeholder,
+  onChange,
 }: {
   label: string;
   name: string;
+  value: string;
   placeholder: string;
+  onChange: (value: string) => void;
 }) {
   return (
     <label>
       <span className="text-sm text-white/62">{label}</span>
       <input
         name={name}
+        value={value}
         placeholder={placeholder}
+        onChange={(event) => onChange(event.target.value)}
         className="mt-2 h-12 w-full border border-white/12 bg-white/[0.03] px-4 text-sm text-white outline-none transition placeholder:text-white/28 focus:border-[#D4B483]"
       />
     </label>
