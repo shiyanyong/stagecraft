@@ -14,8 +14,8 @@
       "currentStock": 24,
       "reservedStock": 2,
       "minimumStock": 10,
-      "status": "Active",
-      "updatedAt": "2026-07-02T01:23:06.730Z"
+      "status": "Hidden",
+      "updatedAt": "2026-07-02T05:21:38.798Z"
     },
     {
       "id": "p-racing",
@@ -29,8 +29,8 @@
       "currentStock": 16,
       "reservedStock": 3,
       "minimumStock": 10,
-      "status": "Active",
-      "updatedAt": "2026-07-02T04:00:00.000Z"
+      "status": "Hidden",
+      "updatedAt": "2026-07-02T05:21:38.798Z"
     },
     {
       "id": "p-city",
@@ -44,8 +44,8 @@
       "currentStock": 42,
       "reservedStock": 4,
       "minimumStock": 12,
-      "status": "Active",
-      "updatedAt": "2026-06-30T06:00:00.000Z"
+      "status": "Hidden",
+      "updatedAt": "2026-07-02T05:21:38.798Z"
     },
     {
       "id": "p-warehouse",
@@ -59,8 +59,8 @@
       "currentStock": 6,
       "reservedStock": 1,
       "minimumStock": 10,
-      "status": "Active",
-      "updatedAt": "2026-07-02T01:23:22.892Z"
+      "status": "Hidden",
+      "updatedAt": "2026-07-02T05:21:38.798Z"
     },
     {
       "id": "p-custom",
@@ -74,9 +74,54 @@
       "currentStock": 5,
       "reservedStock": 0,
       "minimumStock": 3,
-      "status": "Draft",
-      "updatedAt": "2026-06-27T05:00:00.000Z"
+      "status": "Hidden",
+      "updatedAt": "2026-07-02T05:21:38.798Z"
+    },
+    {
+      "id": "p-fuel",
+      "sku": "SC-FUEL-001",
+      "name": "复古加油站地台",
+      "category": "加油站",
+      "description": "复古加油站主题场景地台，适合经典车、越野车、摩托模型和公路收藏主题。",
+      "image": "https://stagecraft-1u3.pages.dev/images/fuel-stop-base.png",
+      "gallery": [],
+      "price": 758,
+      "currentStock": 18,
+      "reservedStock": 1,
+      "minimumStock": 8,
+      "status": "Hidden",
+      "updatedAt": "2026-07-02T05:01:07.500Z"
+    },
+    {
+      "id": "p-military",
+      "sku": "SC-MILITARY-001",
+      "name": "军事基地地台",
+      "category": "军事基地",
+      "description": "军事基地主题展示地台，适合坦克、装甲车、高达机体与军事题材模型。",
+      "image": "https://stagecraft-1u3.pages.dev/images/military-outpost-base.png",
+      "gallery": [],
+      "price": 928,
+      "currentStock": 12,
+      "reservedStock": 2,
+      "minimumStock": 6,
+      "status": "Hidden",
+      "updatedAt": "2026-07-02T05:01:06.517Z"
+    },
+    {
+      "id": "p-future",
+      "sku": "SC-FUTURE-001",
+      "name": "科幻未来地台",
+      "category": "科幻未来",
+      "description": "冷光未来都市主题地台，适合概念车、机甲、高达和科幻收藏展示。",
+      "image": "https://stagecraft-1u3.pages.dev/images/future-metro-base.png",
+      "gallery": [],
+      "price": 998,
+      "currentStock": 10,
+      "reservedStock": 1,
+      "minimumStock": 6,
+      "status": "Hidden",
+      "updatedAt": "2026-07-02T05:01:05.444Z"
     }
   ],
-  "syncedAt": "2026-07-02T05:15:55.210Z"
+  "syncedAt": "2026-07-02T05:21:45.972Z"
 }
