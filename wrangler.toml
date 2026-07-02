@@ -1,0 +1,7 @@
+name = "stagecraft"
+compatibility_date = "2026-07-02"
+pages_build_output_dir = "out"
+
+[[kv_namespaces]]
+binding = "STAGECRAFT_DATA"
+id = "9a3bd0c1f1094966a95a74314692cbb1"

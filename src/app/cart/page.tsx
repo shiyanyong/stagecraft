@@ -10,8 +10,7 @@ import { useStorefrontProducts } from "@/components/storefront-products-provider
 import { buttonVariants } from "@/components/ui/button";
 import { formatPrice, products as staticProducts } from "@/lib/site-data";
 
-const inventoryAdminUrl =
-  process.env.NEXT_PUBLIC_STAGECRAFT_ADMIN_URL ?? "http://127.0.0.1:5173/";
+const storefrontOrderEndpoint = "/api/storefront-order";
 
 const backendProductIds: Record<string, string> = {
   "industrial-bay-01": "p-garage",
@@ -90,19 +89,12 @@ export default function CartPage() {
     event.preventDefault();
     setSubmitted(true);
     const encoded = encodeURIComponent(backendOrderPayload);
-    const adminApiBase = inventoryAdminUrl.replace(/\/$/, "");
-    setOrderReceiverUrl(
-      `${adminApiBase}/api/storefront-order?payload=${encoded}`,
-    );
+    setOrderReceiverUrl(`${storefrontOrderEndpoint}?payload=${encoded}`);
     if (navigator.sendBeacon) {
-      navigator.sendBeacon(
-        `${adminApiBase}/api/storefront-order`,
-        backendOrderPayload,
-      );
+      navigator.sendBeacon(storefrontOrderEndpoint, backendOrderPayload);
     } else {
-      fetch(`${adminApiBase}/api/storefront-order`, {
+      fetch(storefrontOrderEndpoint, {
         method: "POST",
-        mode: "no-cors",
         body: backendOrderPayload,
       }).catch(() => undefined);
     }
