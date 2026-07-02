@@ -8,22 +8,31 @@ export async function onRequestOptions() {
 }
 
 export async function onRequestPost(context) {
-  const payload = await context.request.text();
-  await appendOrder(context.env.STAGECRAFT_DATA, payload);
-  return json({ ok: true });
+  try {
+    const payload = await context.request.text();
+    await appendOrder(context.env.STAGECRAFT_DATA, payload);
+    return json({ ok: true });
+  } catch {
+    return json({ ok: false, warning: "订单暂时未能同步到后台，请稍后重试" }, 500);
+  }
 }
 
 export async function onRequestGet(context) {
-  const url = new URL(context.request.url);
-  const payload = url.searchParams.get("payload");
-  if (payload) {
-    await appendOrder(context.env.STAGECRAFT_DATA, payload);
+  try {
+    const url = new URL(context.request.url);
+    const payload = url.searchParams.get("payload");
+    if (payload) {
+      await appendOrder(context.env.STAGECRAFT_DATA, payload);
+    }
+    return json({ ok: true });
+  } catch {
+    return json({ ok: false, warning: "订单暂时未能同步到后台，请稍后重试" }, 500);
   }
-  return json({ ok: true });
 }
 
 async function appendOrder(kv, payload) {
   if (!payload) return;
+  if (!kv) throw new Error("KV binding missing");
   const raw = await kv.get(ordersKey);
   const orders = parseOrders(raw);
   orders.push(payload);

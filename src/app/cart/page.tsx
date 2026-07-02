@@ -39,6 +39,8 @@ export default function CartPage() {
     note: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [orderReceiverUrl, setOrderReceiverUrl] = useState("");
 
   const cartProducts = items
@@ -85,20 +87,30 @@ export default function CartPage() {
     setCustomer((current) => ({ ...current, [key]: value }));
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    setSubmitError("");
     const encoded = encodeURIComponent(backendOrderPayload);
     setOrderReceiverUrl(`${storefrontOrderEndpoint}?payload=${encoded}`);
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon(storefrontOrderEndpoint, backendOrderPayload);
-    } else {
-      fetch(storefrontOrderEndpoint, {
+    try {
+      const response = await fetch(storefrontOrderEndpoint, {
         method: "POST",
         body: backendOrderPayload,
-      }).catch(() => undefined);
+        headers: { "Content-Type": "application/json" },
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok || result?.ok === false) {
+        throw new Error(result?.warning || "订单同步失败，请稍后重试。");
+      }
+      setSubmitted(true);
+      clearCart();
+    } catch (error) {
+      setSubmitted(false);
+      setSubmitError(error instanceof Error ? error.message : "订单同步失败，请稍后重试。");
+    } finally {
+      setSubmitting(false);
     }
-    clearCart();
   }
 
   return (
@@ -283,10 +295,16 @@ export default function CartPage() {
               </label>
               <button
                 type="submit"
+                disabled={submitting}
                 className="inline-flex min-h-12 items-center justify-center gap-2 bg-[#D4B483] px-5 text-sm font-medium text-black transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4B483] sm:col-span-2"
               >
                 确认订单 <Check className="h-4 w-4" />
               </button>
+              {submitError ? (
+                <p className="text-sm text-red-200 sm:col-span-2">
+                  {submitError}
+                </p>
+              ) : null}
               {submitted ? (
                 <p className="flex items-center gap-2 text-sm text-emerald-200 sm:col-span-2">
                   <Check className="h-4 w-4" />
