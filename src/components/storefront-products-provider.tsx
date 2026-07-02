@@ -33,7 +33,8 @@ type StorefrontProductsValue = {
 };
 
 const StorefrontProductsContext = createContext<StorefrontProductsValue | null>(null);
-const endpoint = "http://127.0.0.1:5173/api/storefront-products";
+const storefrontDataEndpoint = "/storefront-products.json";
+const localAdminEndpoint = "http://127.0.0.1:5173/api/storefront-products";
 const staticSlugByAdminId: Record<string, string> = {
   "p-garage": "industrial-bay-01",
   "p-racing": "race-pit-02",
@@ -89,10 +90,13 @@ export function StorefrontProductsProvider({ children }: { children: ReactNode }
 
   const refreshProducts = async () => {
     try {
-      const response = await fetch(endpoint, { cache: "no-store" });
+      let response = await fetch(`${storefrontDataEndpoint}?t=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) {
+        response = await fetch(localAdminEndpoint, { cache: "no-store" });
+      }
       if (!response.ok) return;
       const payload = (await response.json()) as { products?: SyncedProduct[] };
-      if (!Array.isArray(payload.products) || payload.products.length === 0) return;
+      if (!Array.isArray(payload.products)) return;
       const visibleProducts = payload.products
         .filter((product) => product.status === "Active" || product.status === "Draft")
         .map(toStorefrontProduct);
