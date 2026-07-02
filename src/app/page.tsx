@@ -12,6 +12,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { useStorefrontProducts } from "@/components/storefront-products-provider";
 import { buttonVariants } from "@/components/ui/button";
 import {
   assets,
@@ -19,7 +20,6 @@ import {
   formatPrice,
   previewAngles,
   previewModels,
-  products,
   series,
   statusStyles,
 } from "@/lib/site-data";
@@ -423,6 +423,8 @@ function CategoryEntry() {
 }
 
 function BestSellers() {
+  const { products } = useStorefrontProducts();
+
   return (
     <section className="bg-[#111111] py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-8">
