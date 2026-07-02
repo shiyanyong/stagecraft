@@ -1,0 +1,82 @@
+{
+  "products": [
+    {
+      "id": "p-garage",
+      "sku": "SC-GARAGE-001",
+      "name": "工业车库地台",
+      "category": "工业车库",
+      "description": "适合 1:64 与 1:43 车模的工业车库展示地台，带旧化地面、墙面与车库氛围细节。",
+      "image": "https://stagecraft-1u3.pages.dev/images/industrial-garage-base.png",
+      "gallery": [
+        "https://stagecraft-1u3.pages.dev/images/hero-industrial-diorama.png"
+      ],
+      "price": 698,
+      "currentStock": 24,
+      "reservedStock": 2,
+      "minimumStock": 10,
+      "status": "Active",
+      "updatedAt": "2026-07-02T01:23:06.730Z"
+    },
+    {
+      "id": "p-racing",
+      "sku": "SC-RACING-001",
+      "name": "赛车维修区地台",
+      "category": "赛车维修区",
+      "description": "赛车主题维修区地台，适合赛车、改装车、车队主题收藏展示。",
+      "image": "https://stagecraft-1u3.pages.dev/images/race-pit-base.png",
+      "gallery": [],
+      "price": 868,
+      "currentStock": 16,
+      "reservedStock": 3,
+      "minimumStock": 10,
+      "status": "Active",
+      "updatedAt": "2026-07-02T04:00:00.000Z"
+    },
+    {
+      "id": "p-city",
+      "sku": "SC-CITY-001",
+      "name": "城市街景地台",
+      "category": "城市街景",
+      "description": "城市街道与路面场景，适合街车、跑车、人偶与摄影构图。",
+      "image": "https://stagecraft-1u3.pages.dev/images/urban-street-base.png",
+      "gallery": [],
+      "price": 628,
+      "currentStock": 42,
+      "reservedStock": 4,
+      "minimumStock": 12,
+      "status": "Active",
+      "updatedAt": "2026-06-30T06:00:00.000Z"
+    },
+    {
+      "id": "p-warehouse",
+      "sku": "SC-WAREHOUSE-001",
+      "name": "仓库场景地台",
+      "category": "仓库场景",
+      "description": "仓储、货运、工业陈列主题地台，适合工程车辆与收藏级模型组合展示。",
+      "image": "https://stagecraft-1u3.pages.dev/images/series-gallery-dioramas.png",
+      "gallery": [],
+      "price": 758,
+      "currentStock": 6,
+      "reservedStock": 1,
+      "minimumStock": 10,
+      "status": "Active",
+      "updatedAt": "2026-07-02T01:23:22.892Z"
+    },
+    {
+      "id": "p-custom",
+      "sku": "SC-CUSTOM-001",
+      "name": "定制场景地台",
+      "category": "定制场景",
+      "description": "按模型比例、主题、灯光与陈列空间定制的收藏级场景地台。",
+      "image": "https://stagecraft-1u3.pages.dev/images/hero-industrial-diorama.png",
+      "gallery": [],
+      "price": 1680,
+      "currentStock": 5,
+      "reservedStock": 0,
+      "minimumStock": 3,
+      "status": "Draft",
+      "updatedAt": "2026-06-27T05:00:00.000Z"
+    }
+  ],
+  "syncedAt": "2026-07-02T05:06:36.573Z"
+}
