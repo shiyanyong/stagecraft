@@ -3,7 +3,7 @@
 import { useMemo, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Check, ExternalLink, Minus, Plus, Send, Trash2 } from "lucide-react";
+import { Check, Minus, Plus, Send, Trash2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { useCart } from "@/components/cart-provider";
 import { buttonVariants } from "@/components/ui/button";
@@ -56,7 +56,7 @@ export default function CartPage() {
     )
     .slice(0, 3);
 
-  const adminOrderUrl = useMemo(() => {
+  const backendOrderUrl = useMemo(() => {
     if (!cartProducts.length) return inventoryAdminUrl;
 
     const payload = {
@@ -89,7 +89,7 @@ export default function CartPage() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitted(true);
-    window.open(adminOrderUrl, "_blank", "noopener,noreferrer");
+    window.open(backendOrderUrl, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -182,7 +182,7 @@ export default function CartPage() {
               <div className="mt-6 space-y-4 border-y border-white/10 py-6">
                 <SummaryRow label="商品数量" value={`${items.length} 款`} />
                 <SummaryRow label="商品小计" value={formatPrice(subtotal)} />
-                <SummaryRow label="库存后台" value="提交后同步" />
+                <SummaryRow label="配送方式" value="客服确认" />
                 <div className="flex justify-between text-xl font-semibold">
                   <span>预计合计</span>
                   <span className="text-[#D4B483]">
@@ -194,18 +194,7 @@ export default function CartPage() {
                 href="#checkout"
                 className={buttonVariants({ className: "mt-6 w-full" })}
               >
-                填写下单信息 <Send className="h-4 w-4" />
-              </a>
-              <a
-                href={adminOrderUrl}
-                target="_blank"
-                rel="noreferrer"
-                className={buttonVariants({
-                  className: "mt-3 w-full",
-                  variant: "secondary",
-                })}
-              >
-                同步到库存后台 <ExternalLink className="h-4 w-4" />
+                确认订单 <Send className="h-4 w-4" />
               </a>
               <button
                 type="button"
@@ -215,7 +204,7 @@ export default function CartPage() {
                 清空购物车
               </button>
               <p className="mt-5 text-sm leading-6 text-white/42">
-                后台会读取这笔前台订单，生成已支付订单并自动扣减对应商品库存。
+                确认后我们会根据订单内容核对库存、包装方式与发货周期。
               </p>
             </aside>
           </div>
@@ -233,10 +222,10 @@ export default function CartPage() {
                 Checkout
               </p>
               <h2 className="mt-4 text-3xl font-semibold sm:text-5xl">
-                提交到库存后台
+                确认订单
               </h2>
               <p className="mt-5 max-w-xl leading-8 text-white/58">
-                填写客户信息后，会打开 StageCraft 智能库存后台，自动导入订单、校验库存并扣减库存。线上页面无法直接访问你电脑本机后台时，也可以用“同步到库存后台”按钮手动打开。
+                留下收货与联系方式，订单确认后将进入处理流程。我们会尽快核对库存并安排后续确认。
               </p>
             </div>
             <form
@@ -287,12 +276,12 @@ export default function CartPage() {
                 type="submit"
                 className="inline-flex min-h-12 items-center justify-center gap-2 bg-[#D4B483] px-5 text-sm font-medium text-black transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4B483] sm:col-span-2"
               >
-                提交并打开库存后台 <ExternalLink className="h-4 w-4" />
+                确认订单 <Check className="h-4 w-4" />
               </button>
               {submitted ? (
                 <p className="flex items-center gap-2 text-sm text-emerald-200 sm:col-span-2">
                   <Check className="h-4 w-4" />
-                  已生成前台订单数据，请在新打开的库存后台确认导入结果。
+                  订单已确认，我们会尽快核对库存并联系你。
                 </p>
               ) : null}
             </form>
@@ -315,7 +304,7 @@ function EmptyCart({
       <div className="border border-white/10 bg-[#111111] p-8 sm:p-12">
         <h2 className="text-2xl font-semibold">购物车还是空的</h2>
         <p className="mt-4 max-w-xl leading-8 text-white/56">
-          先选择一款适合你模型比例和陈列空间的地台，加入后可统一提交到库存后台。
+          先选择一款适合你模型比例和陈列空间的地台，加入后可统一确认订单。
         </p>
         <Link href="/products" className={buttonVariants({ className: "mt-8" })}>
           去选购地台
