@@ -1,6 +1,6 @@
 export async function onRequestGet(context) {
   const payload =
-    (await context.env.STAGECRAFT_DATA.get("storefront-products")) ??
+    (await context.env.STAGECRAFT_DATA.get("storefront-products-v2")) ??
     JSON.stringify({ products: [], syncedAt: null });
 
   return new Response(payload, {
