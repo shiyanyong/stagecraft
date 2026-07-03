@@ -1,4 +1,4 @@
-const ordersKey = "storefront-orders";
+const ordersKey = "storefront-orders-v2";
 
 export async function onRequestOptions() {
   return new Response(null, {
@@ -48,8 +48,9 @@ function parseOrders(raw) {
   }
 }
 
-function json(payload) {
+function json(payload, status = 200) {
   return new Response(JSON.stringify(payload), {
+    status,
     headers: corsHeaders(),
   });
 }
