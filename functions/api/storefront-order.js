@@ -13,7 +13,7 @@ export async function onRequestPost(context) {
     await appendOrder(context.env.STAGECRAFT_DATA, payload);
     return json({ ok: true });
   } catch {
-    return json({ ok: false, warning: "订单暂时未能同步到后台，请稍后重试" }, 500);
+    return json({ ok: false, warning: "订单暂时未能同步到后台，请稍后重试。" }, 500);
   }
 }
 
@@ -26,7 +26,7 @@ export async function onRequestGet(context) {
     }
     return json({ ok: true });
   } catch {
-    return json({ ok: false, warning: "订单暂时未能同步到后台，请稍后重试" }, 500);
+    return json({ ok: false, warning: "订单暂时未能同步到后台，请稍后重试。" }, 500);
   }
 }
 

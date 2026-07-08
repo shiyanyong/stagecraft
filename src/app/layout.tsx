@@ -16,23 +16,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://stagecraft.example"),
-  title: "STAGECRAFT | 模型场景地台商城",
+  metadataBase: new URL("https://mowork.xyz"),
+  title: "御罕泉 | 天然苏打水官方商城",
   description:
-    "STAGECRAFT 提供可直接展示的模型场景地台、模块组合与收藏级展示方案，适配 1:64、1:43、1:24、1:18 模型。",
+    "御罕泉提供天然苏打水、低钠苏打水、气泡苏打水、玻璃瓶装、家庭箱装与企业定制用水，支持官网下单与后台库存订单联动。",
   keywords: [
-    "模型地台",
-    "微缩场景",
-    "模型场景地台商城",
-    "1:64 车模",
-    "高达地台",
-    "坦克地台",
-    "收藏展示",
+    "御罕泉",
+    "天然苏打水",
+    "低钠苏打水",
+    "气泡苏打水",
+    "弱碱性饮用水",
+    "苏打水商城",
+    "家庭箱装饮用水",
+    "企业定制饮用水",
   ],
   openGraph: {
-    title: "STAGECRAFT | 模型场景地台商城",
-    description: "为模型搭建可展示、可拍摄、可收藏的场景。",
-    images: ["/images/hero-industrial-diorama.png"],
+    title: "御罕泉 | 天然苏打水官方商城",
+    description: "清爽、低负担、适合家庭与商务场景的天然苏打水。",
+    images: ["/images/yuhanquan-hero-wide.png"],
   },
 };
 

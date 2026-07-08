@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ffffff;
+  --background: #eef8ff;
+  --foreground: #102a43;
 }
 
 @theme inline {
@@ -10,13 +10,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
@@ -31,8 +24,8 @@ html {
 }
 
 ::selection {
-  background: #d4b483;
-  color: #0a0a0a;
+  background: #b8c7d3;
+  color: #102a43;
 }
 
 .scrollbar-none {
@@ -51,8 +44,8 @@ html {
 
 .hero-ambient-glow {
   background:
-    radial-gradient(circle at 76% 38%, rgba(212, 180, 131, 0.16), transparent 28%),
-    radial-gradient(circle at 58% 82%, rgba(255, 255, 255, 0.055), transparent 26%);
+    radial-gradient(circle at 76% 38%, rgba(184, 199, 211, 0.22), transparent 28%),
+    radial-gradient(circle at 58% 82%, rgba(77, 164, 217, 0.14), transparent 26%);
   mix-blend-mode: screen;
   opacity: 0.72;
   pointer-events: none;
@@ -63,9 +56,9 @@ html {
   background: linear-gradient(
     104deg,
     transparent 0%,
-    rgba(255, 226, 178, 0.02) 24%,
-    rgba(255, 226, 178, 0.16) 48%,
-    rgba(255, 226, 178, 0.035) 64%,
+    rgba(255, 255, 255, 0.04) 24%,
+    rgba(184, 199, 211, 0.22) 48%,
+    rgba(255, 255, 255, 0.08) 64%,
     transparent 100%
   );
   filter: blur(14px);

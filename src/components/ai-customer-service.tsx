@@ -10,9 +10,9 @@ type ChatMessage = {
 };
 
 const starterQuestions = [
-  "1:64 车模适合哪款地台？",
-  "想拍照展示，推荐哪种场景？",
-  "现货和预订有什么区别？",
+  "日常饮用选 330ml 还是 500ml？",
+  "低钠苏打水适合哪些人？",
+  "企业采购怎么选箱规？",
 ];
 
 export function AICustomerService() {
@@ -24,7 +24,7 @@ export function AICustomerService() {
     {
       role: "assistant",
       content:
-        "你好，我是 STAGECRAFT AI 客服。可以帮你按模型比例、展示空间和拍摄需求推荐地台。",
+        "你好，我是御罕泉 AI 客服。可以帮你按饮用场景、规格、预算和库存状态选择天然苏打水。",
     },
   ]);
 
@@ -94,22 +94,22 @@ export function AICustomerService() {
   return (
     <div className="fixed bottom-4 right-4 z-50 sm:bottom-6 sm:right-6">
       {open ? (
-        <section className="w-[calc(100vw-2rem)] max-w-[390px] overflow-hidden border border-[#D4B483]/30 bg-[#0A0A0A]/96 text-white shadow-2xl shadow-black/50 backdrop-blur">
-          <header className="flex items-center justify-between border-b border-white/10 bg-[#111111] px-4 py-3">
+        <section className="w-[calc(100vw-2rem)] max-w-[390px] overflow-hidden border border-[#B8C7D3]/55 bg-[#F7FCFF]/96 text-[#102A43] shadow-2xl shadow-sky-900/15 backdrop-blur">
+          <header className="flex items-center justify-between border-b border-[#B8C7D3]/45 bg-white/82 px-4 py-3">
             <div className="flex items-center gap-3">
-              <span className="grid h-9 w-9 place-items-center border border-[#D4B483]/35 bg-[#D4B483]/12 text-[#D4B483]">
+              <span className="grid h-9 w-9 place-items-center border border-[#B8C7D3]/55 bg-[#DFF2FC] text-[#526A7C]">
                 <Bot className="h-4 w-4" />
               </span>
               <div>
-                <strong className="block text-sm">STAGECRAFT AI 客服</strong>
-                <span className="text-xs text-white/45">商品推荐 / 库存咨询 / 搭配建议</span>
+                <strong className="block text-sm">御罕泉 AI 客服</strong>
+                <span className="text-xs text-[#6D8495]">商品推荐 / 库存咨询 / 采购建议</span>
               </div>
             </div>
             <button
               type="button"
               aria-label="关闭 AI 客服"
               onClick={() => setOpen(false)}
-              className="grid h-9 w-9 place-items-center border border-white/10 text-white/58 transition hover:border-white/30 hover:text-white"
+              className="grid h-9 w-9 place-items-center border border-[#B8C7D3]/55 text-[#6D8495] transition hover:bg-white hover:text-[#102A43]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -124,8 +124,8 @@ export function AICustomerService() {
                 <p
                   className={`max-w-[82%] whitespace-pre-wrap rounded-none border px-3 py-2 text-sm leading-6 ${
                     message.role === "user"
-                      ? "border-[#D4B483]/40 bg-[#D4B483] text-black"
-                      : "border-white/10 bg-white/[0.04] text-white/72"
+                      ? "border-[#B8C7D3] bg-[#B8C7D3] text-[#102A43]"
+                      : "border-[#B8C7D3]/45 bg-white/75 text-[#5A7182]"
                   }`}
                 >
                   {message.content}
@@ -133,20 +133,20 @@ export function AICustomerService() {
               </div>
             ))}
             {loading ? (
-              <p className="inline-flex border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/50">
+              <p className="inline-flex border border-[#B8C7D3]/45 bg-white/75 px-3 py-2 text-sm text-[#6D8495]">
                 正在思考...
               </p>
             ) : null}
           </div>
 
-          <div className="border-t border-white/10 px-4 py-3">
+          <div className="border-t border-[#B8C7D3]/45 px-4 py-3">
             <div className="mb-3 flex gap-2 overflow-x-auto pb-1">
               {starterQuestions.map((question) => (
                 <button
                   key={question}
                   type="button"
                   onClick={() => void sendMessage(question)}
-                  className="shrink-0 border border-white/10 px-3 py-2 text-xs text-white/55 transition hover:border-[#D4B483]/50 hover:text-[#D4B483]"
+                  className="shrink-0 border border-[#B8C7D3]/45 bg-white/70 px-3 py-2 text-xs text-[#5A7182] transition hover:border-[#8FA8B8] hover:bg-white"
                 >
                   {question}
                 </button>
@@ -157,12 +157,12 @@ export function AICustomerService() {
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
                 placeholder="输入你想咨询的问题"
-                className="h-11 min-w-0 flex-1 border border-white/12 bg-white/[0.03] px-3 text-sm text-white outline-none transition placeholder:text-white/28 focus:border-[#D4B483]"
+                className="h-11 min-w-0 flex-1 border border-[#B8C7D3]/55 bg-white/75 px-3 text-sm text-[#102A43] outline-none transition placeholder:text-[#93A8B6] focus:border-[#8FA8B8]"
               />
               <button
                 type="submit"
                 disabled={loading || !input.trim()}
-                className="grid h-11 w-11 place-items-center bg-[#D4B483] text-black transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-45"
+                className="grid h-11 w-11 place-items-center bg-[#B8C7D3] text-[#102A43] transition hover:bg-[#D8E4EC] disabled:cursor-not-allowed disabled:opacity-45"
                 aria-label="发送消息"
               >
                 <Send className="h-4 w-4" />
@@ -174,7 +174,7 @@ export function AICustomerService() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="flex h-14 items-center gap-3 border border-[#D4B483]/45 bg-[#D4B483] px-5 text-sm font-medium text-black shadow-2xl shadow-black/40 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4B483]"
+          className="flex h-14 items-center gap-3 border border-[#B8C7D3]/70 bg-[#B8C7D3] px-5 text-sm font-medium text-[#102A43] shadow-2xl shadow-sky-900/15 transition hover:bg-[#D8E4EC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B8C7D3]"
         >
           <MessageCircle className="h-5 w-5" />
           AI 客服

@@ -13,13 +13,13 @@ export function buttonVariants({
   variant?: ButtonProps["variant"];
 } = {}) {
   return cn(
-    "inline-flex h-12 items-center justify-center gap-2 rounded-none border px-6 text-sm font-medium tracking-[0.18em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4B483] disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex h-12 items-center justify-center gap-2 rounded-none border px-6 text-sm font-medium tracking-[0.16em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B8C7D3] disabled:pointer-events-none disabled:opacity-50",
     variant === "primary" &&
-      "border-[#D4B483] bg-[#D4B483] text-[#0A0A0A] hover:bg-[#E5C693]",
+      "border-[#B8C7D3] bg-[#B8C7D3] text-[#102A43] hover:bg-[#D8E4EC]",
     variant === "secondary" &&
-      "border-white/25 bg-white/5 text-white hover:border-white/45 hover:bg-white/10",
+      "border-[#B8C7D3]/70 bg-white/65 text-[#526A7C] hover:border-[#90A4B3] hover:bg-white",
     variant === "ghost" &&
-      "border-transparent bg-transparent text-white/70 hover:text-white",
+      "border-transparent bg-transparent text-[#557086] hover:text-[#102A43]",
     className,
   );
 }

@@ -4,27 +4,27 @@ import { ProductCatalog } from "@/components/product-catalog";
 import { buttonVariants } from "@/components/ui/button";
 
 export const metadata = {
-  title: "商品目录 | STAGECRAFT 模型场景地台商城",
+  title: "商品目录 | 御罕泉天然苏打水官方商城",
   description:
-    "按比例、场景和库存状态筛选 STAGECRAFT 模型场景地台，浏览工业车库、赛车场、城市街景、加油站、军事基地与科幻未来系列。",
+    "按规格、分类和库存状态筛选御罕泉天然苏打水，浏览经典原味、含气苏打水、低钠苏打水、玻璃瓶装、家庭箱装与企业定制产品。",
 };
 
 export default function ProductsPage() {
   return (
-    <main className="min-h-screen bg-[#0A0A0A] text-white">
+    <main className="min-h-screen bg-[#EEF8FF] text-[#102A43]">
       <SiteHeader />
       <ProductCatalog />
-      <section className="border-t border-white/10 bg-[#111111] py-16 sm:py-20">
+      <section className="border-t border-[#B8C7D3]/45 bg-white/58 py-16 sm:py-20">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 px-4 sm:px-8 lg:flex-row lg:items-center">
           <div>
-            <p className="text-xs uppercase tracking-[0.36em] text-[#D4B483]">
-              Custom Match
+            <p className="text-xs uppercase tracking-[0.36em] text-[#5F7687]">
+              Bulk Purchase
             </p>
             <h2 className="mt-5 text-3xl font-semibold sm:text-4xl">
-              不确定模型适合哪款地台？
+              不确定该选哪种箱规？
             </h2>
-            <p className="mt-5 max-w-2xl leading-7 text-white/55">
-              告诉我们模型比例、展示柜尺寸和想要的场景氛围，可为你推荐组合或定制模块。
+            <p className="mt-5 max-w-2xl leading-7 text-[#5A7182]">
+              可以先加入购物车确认订单，也可以通过客服说明家庭、办公、餐饮或企业采购需求，我们会按库存和补货周期给出建议。
             </p>
           </div>
           <Link href="/cart" className={buttonVariants()}>

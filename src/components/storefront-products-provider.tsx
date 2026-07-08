@@ -36,13 +36,20 @@ const StorefrontProductsContext = createContext<StorefrontProductsValue | null>(
 const liveStorefrontDataEndpoint = "/api/storefront-products";
 const storefrontDataEndpoint = "/storefront-products.json";
 const localAdminEndpoint = "http://127.0.0.1:5173/api/storefront-products";
+
 const staticSlugByAdminId: Record<string, string> = {
-  "p-garage": "industrial-bay-01",
-  "p-racing": "race-pit-02",
-  "p-city": "urban-street-03",
-  "p-fuel": "fuel-stop-04",
-  "p-military": "military-outpost-05",
-  "p-future": "future-metro-06",
+  "p-classic": "yuhanquan-classic-330",
+  "p-sparkling": "yuhanquan-sparkling-330",
+  "p-low-sodium": "yuhanquan-low-sodium-500",
+  "p-glass": "yuhanquan-glass-275",
+  "p-family": "yuhanquan-family-pack",
+  "p-custom": "yuhanquan-business-gift",
+  "p-garage": "yuhanquan-classic-330",
+  "p-racing": "yuhanquan-sparkling-330",
+  "p-city": "yuhanquan-low-sodium-500",
+  "p-fuel": "yuhanquan-glass-275",
+  "p-military": "yuhanquan-family-pack",
+  "p-future": "yuhanquan-business-gift",
 };
 
 function slugify(input: string) {
@@ -53,21 +60,22 @@ function slugify(input: string) {
 }
 
 function mapStatus(product: SyncedProduct): ProductStatus {
-  if (product.status === "Draft") return "预订" as ProductStatus;
-  if (product.currentStock - product.reservedStock <= 3) return "小批量" as ProductStatus;
-  return "现货" as ProductStatus;
+  if (product.status === "Draft") return "预订";
+  if (product.currentStock - product.reservedStock <= 24) return "小批量";
+  return "现货";
 }
 
 function inferScales(category: string): Scale[] {
-  if (category.includes("军事")) return ["1:24", "1:18"];
-  if (category.includes("科幻")) return ["1:64", "1:24", "1:18"];
-  return ["1:64", "1:43"];
+  if (category.includes("玻璃") || category.includes("礼盒")) return ["275ml", "330ml", "箱装"];
+  if (category.includes("家庭") || category.includes("低钠")) return ["500ml", "箱装"];
+  return ["330ml", "箱装"];
 }
 
 function toStorefrontProduct(product: SyncedProduct, index: number): StaticProduct {
   const fallback = staticProducts[index % staticProducts.length];
   const scales = inferScales(product.category);
   const slug = staticSlugByAdminId[product.id] ?? slugify(product.sku || product.id || product.name);
+  const available = Math.max(product.currentStock - product.reservedStock, 0);
 
   return {
     ...fallback,
@@ -76,14 +84,17 @@ function toStorefrontProduct(product: SyncedProduct, index: number): StaticProdu
     cnName: product.name,
     scene: product.category,
     price: product.price,
-    image: product.image || fallback.image,
+    image: fallback.image,
     objectPosition: "50% center",
     scales,
     scale: scales.join(" / "),
     status: mapStatus(product),
     description: product.description || fallback.description,
-    shipTime: product.status === "Draft" ? "预订商品，确认后安排生产与发货" : "现货商品，确认订单后安排发货",
-  };
+    shipTime:
+      product.status === "Draft"
+        ? "预订商品，确认后按批次安排生产与发货"
+        : `可售库存约 ${available} 件，确认订单后安排发货`,
+  } as StaticProduct;
 }
 
 export function StorefrontProductsProvider({ children }: { children: ReactNode }) {
@@ -104,11 +115,7 @@ export function StorefrontProductsProvider({ children }: { children: ReactNode }
       const visibleProducts = payload.products
         .filter((product) => product.status === "Active" || product.status === "Draft")
         .map(toStorefrontProduct);
-      if (!visibleProducts.length) {
-        setDynamicProducts(null);
-        return;
-      }
-      setDynamicProducts(visibleProducts);
+      setDynamicProducts(visibleProducts.length ? visibleProducts : null);
     } catch {
       setDynamicProducts(null);
     }
